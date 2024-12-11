@@ -2,20 +2,25 @@ import os
 import re
 from pathlib import Path
 
-# Define a pattern to match the folder naming convention.
-# Example format: "Author - Title (Year)"
-FOLDERNAME_PATTERN = re.compile(r"(?P<author>[^-]+) - (?P<title>.+?) \((?P<year>\d{4})\)")
+# Define a pattern to match common folder naming conventions.
+# Handles formats like:
+# - "Author - Title"
+# - "Title - Author"
+FOLDERNAME_PATTERNS = [
+    re.compile(r"(?P<author>[^-]+) - (?P<title>.+)"),  # Format: Author - Title
+    re.compile(r"(?P<title>.+) - (?P<author>[^-]+)"),  # Format: Title - Author
+]
 
 def parse_foldername(foldername):
     """
-    Parses the folder name using a regular expression pattern to extract metadata.
-    Returns a dictionary with author, title, and year if matched.
+    Parses the folder name using regular expression patterns to extract metadata.
+    Returns a dictionary with author and title if matched.
     """
-    match = FOLDERNAME_PATTERN.match(foldername)
-    if match:
-        return match.groupdict()
-    else:
-        return None
+    for pattern in FOLDERNAME_PATTERNS:
+        match = pattern.match(foldername)
+        if match:
+            return match.groupdict()
+    return None
 
 def rename_and_organize_folder(folder_path, metadata, audiobook_dir, dry_run=True):
     """
@@ -59,7 +64,7 @@ def main():
                 rename_and_organize_folder(folder, metadata, audiobook_dir, dry_run=True)
                 renamed_folders.append(folder)
             else:
-                print(f"Skipping folder: {folder.name} due to unmatched pattern")
+                print(f"Skipping folder: {folder.name} (No matching pattern)")
         else:
             print(f"Skipping file: {folder.name} (Not a folder)")
 
@@ -80,4 +85,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
