@@ -1,4 +1,4 @@
-import os
+import argparse
 import re
 from pathlib import Path
 
@@ -12,76 +12,87 @@ FOLDERNAME_PATTERNS = [
 ]
 
 def parse_foldername(foldername):
-    """
-    Parses the folder name using regular expression patterns to extract metadata.
-    Returns a dictionary with author and title if matched.
-    """
+    """Parse the folder name to extract metadata."""
     for pattern in FOLDERNAME_PATTERNS:
         match = pattern.match(foldername)
         if match:
             return match.groupdict()
-    return None
+    return {}
 
-def rename_and_organize_folder(folder_path, metadata, audiobook_dir, dry_run=True):
-    """
-    Renames and organizes an audiobook folder based on parsed metadata.
-    Format: "Title - Author"
-    """
+def build_target_path(base_dir, metadata, naming, structure):
+    """Build the destination path based on structure and naming."""
+    parts = []
+    for field in structure:
+        value = metadata.get(field, f"Unknown {field.title()}").strip()
+        parts.append(value)
+    target_base = base_dir.joinpath(*parts)
+
     author = metadata.get("author", "Unknown Author").strip()
     title = metadata.get("title", "Unknown Title").strip()
+    folder_name = naming.format(author=author, title=title)
+    return target_base / folder_name
 
-    # Customizable naming convention for folders
-    new_folder_name = f"{title} - {author}"
+def rename_and_organize_folder(folder_path, metadata, output_dir, naming, structure, dry_run=True):
+    target_path = build_target_path(output_dir, metadata, naming, structure)
 
-    # Define the target folder path
-    target_path = audiobook_dir / new_folder_name
-
-    # Print the change (dry run or real run)
     if dry_run:
-        print(f"Would rename and move: {folder_path} -> {target_path}")
+        print(f"Would move: {folder_path} -> {target_path}")
     else:
+        target_path.parent.mkdir(parents=True, exist_ok=True)
         if not target_path.exists():
             folder_path.rename(target_path)
-            print(f"Renamed and moved: {folder_path} -> {target_path}")
+            print(f"Moved: {folder_path} -> {target_path}")
         else:
-            print(f"Skipping: {folder_path} (Target folder already exists)")
+            print(f"Skipping: {folder_path} (Target exists)")
 
-def main():
-    # Prompt the user to input the audiobook directory
-    audiobook_dir = Path(input("Where are your audiobook folders at? (Enter the full path): ").strip())
-    
-    if not audiobook_dir.exists() or not audiobook_dir.is_dir():
-        print("Invalid path. Please provide a valid directory.")
-        return
+def organize_audiobooks(audiobook_dir, output_dir=None, naming="{title} - {author}", structure=None, commit=False):
+    audiobook_dir = Path(audiobook_dir)
+    output_dir = Path(output_dir) if output_dir else audiobook_dir
+    structure = [s.strip() for s in (structure or []) if s.strip()]
 
-    # Dry-run mode
     print("\nScanning for folders to rename and organize...")
-    renamed_folders = []
+    processed = []
     for folder in audiobook_dir.iterdir():
         if folder.is_dir():
             metadata = parse_foldername(folder.name)
             if metadata:
-                rename_and_organize_folder(folder, metadata, audiobook_dir, dry_run=True)
-                renamed_folders.append(folder)
+                rename_and_organize_folder(folder, metadata, output_dir, naming, structure, dry_run=not commit)
+                processed.append(folder)
             else:
                 print(f"Skipping folder: {folder.name} (No matching pattern)")
         else:
             print(f"Skipping file: {folder.name} (Not a folder)")
 
-    # Summary
-    print(f"\nDry run complete. {len(renamed_folders)} folders would be renamed and organized.")
+    msg = "Operation complete" if commit else "Dry run complete"
+    print(f"\n{msg}. {len(processed)} folders processed.")
 
-    # Ask for confirmation
-    confirm = input("\nDo you want to commit these changes? (yes/no): ").strip().lower()
-    if confirm == "yes":
-        print("\nCommitting changes...")
-        for folder in renamed_folders:
-            metadata = parse_foldername(folder.name)
-            if metadata:
-                rename_and_organize_folder(folder, metadata, audiobook_dir, dry_run=False)
-        print("Folder renaming and organization complete.")
-    else:
-        print("\nNo changes were made. Exiting.")
+def parse_args():
+    parser = argparse.ArgumentParser(description="Organize audiobook folders")
+    parser.add_argument("--input", "-i", required=False, help="Directory with audiobook folders")
+    parser.add_argument("--output", "-o", help="Directory to place organized folders")
+    parser.add_argument("--naming-convention", "-n", default="{title} - {author}", help="Folder naming pattern")
+    parser.add_argument("--folder-structure", "-s", default="", help="Comma separated hierarchy (e.g. author)")
+    parser.add_argument("--commit", action="store_true", help="Apply changes instead of dry run")
+    return parser.parse_args()
+
+def main():
+    args = parse_args()
+
+    audiobook_dir = Path(args.input) if args.input else Path(input("Where are your audiobook folders at? (Enter the full path): ").strip())
+    if not audiobook_dir.exists() or not audiobook_dir.is_dir():
+        print("Invalid path. Please provide a valid directory.")
+        return
+
+    output_dir = Path(args.output) if args.output else audiobook_dir
+    structure = args.folder_structure.split(',') if args.folder_structure else []
+
+    organize_audiobooks(
+        audiobook_dir=audiobook_dir,
+        output_dir=output_dir,
+        naming=args.naming_convention,
+        structure=structure,
+        commit=args.commit,
+    )
 
 if __name__ == "__main__":
     main()
