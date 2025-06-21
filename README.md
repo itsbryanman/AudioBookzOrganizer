@@ -4,7 +4,7 @@ AudioBookzOrganizer is a Python utility that renames and organizes your audioboo
 
 ## Features
 
-* **Metadata Parsing**: Extracts basic information such as author and title from common folder naming schemes.
+* **Accurate Metadata Extraction**: Reads author and title metadata directly from audio files (e.g., MP3, M4A, M4B) and falls back to folder names when tags are missing.
 * **File Renaming**: Renames folders based on a customizable naming scheme (default: `"{title} - {author}"`).
 * **Folder Organization**: Optionally creates sub‑folders (e.g. by author) and moves audiobook folders into them.
 * **Command-Line Interface**: Supports dry runs and fully automated execution.
@@ -22,6 +22,8 @@ AudioBookzOrganizer is a Python utility that renames and organizes your audioboo
    ```
 
 ## Usage
+
+The script first attempts to read metadata from the audio files themselves. If no tags are found, it falls back to parsing the folder name.
 
 Run the script in dry-run mode to see what changes would be made:
 

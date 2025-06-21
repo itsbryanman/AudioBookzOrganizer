@@ -1,6 +1,9 @@
 import argparse
+import os
 import re
 from pathlib import Path
+
+import mutagen
 
 # Define a pattern to match common folder naming conventions.
 # Handles formats like:
@@ -17,6 +20,27 @@ def parse_foldername(foldername):
         match = pattern.match(foldername)
         if match:
             return match.groupdict()
+    return {}
+
+def extract_metadata_from_files(folder_path):
+    """Scan for audio files and extract metadata using mutagen."""
+    for root, _, files in os.walk(folder_path):
+        for file in files:
+            if file.lower().endswith((
+                '.mp3',
+                '.m4a',
+                '.m4b',
+                '.flac',
+            )):
+                try:
+                    audio = mutagen.File(os.path.join(root, file))
+                    if audio:
+                        title = audio.get('album', [None])[0]
+                        author = audio.get('artist', [None])[0]
+                        if title and author:
+                            return {'title': str(title), 'author': str(author)}
+                except Exception as e:  # pragma: no cover - best effort
+                    print(f"Could not read metadata from {file}: {e}")
     return {}
 
 def build_target_path(base_dir, metadata, naming, structure):
@@ -54,12 +78,23 @@ def organize_audiobooks(audiobook_dir, output_dir=None, naming="{title} - {autho
     processed = []
     for folder in audiobook_dir.iterdir():
         if folder.is_dir():
-            metadata = parse_foldername(folder.name)
+            metadata = extract_metadata_from_files(folder)
+
+            if not metadata:
+                metadata = parse_foldername(folder.name)
+
             if metadata:
-                rename_and_organize_folder(folder, metadata, output_dir, naming, structure, dry_run=not commit)
+                rename_and_organize_folder(
+                    folder,
+                    metadata,
+                    output_dir,
+                    naming,
+                    structure,
+                    dry_run=not commit,
+                )
                 processed.append(folder)
             else:
-                print(f"Skipping folder: {folder.name} (No matching pattern)")
+                print(f"Skipping folder: {folder.name} (Could not determine metadata)")
         else:
             print(f"Skipping file: {folder.name} (Not a folder)")
 
