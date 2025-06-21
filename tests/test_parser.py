@@ -13,6 +13,8 @@ from audiobookz_organizer.parser import parse_folder
         ("Some Title - Some Author", "Some Author", "Some Title"),
         ("J.R.R. Tolkien - The Hobbit", "J.R.R. Tolkien", "The Hobbit"),
         ("The Girl Who Played with Fire - Stieg Larsson", "Stieg Larsson", "The Girl Who Played with Fire"),
+        ("A Book - With a Hyphen - Some Author", "Some Author", "A Book - With a Hyphen"),
+        ("Not an Author - This title - ends", "ends", "Not an Author - This title"),
     ],
 )
 def test_parse_folder_success(foldername, expected_author, expected_title):

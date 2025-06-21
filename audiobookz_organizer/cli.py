@@ -31,6 +31,7 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Fetch additional metadata from online sources",
     )
+    parser.add_argument("--api-key", help="Google Books API key for metadata fetching")
     return parser.parse_args()
 
 
@@ -52,6 +53,7 @@ def main() -> None:
         structure=structure,
         commit=args.commit,
         fetch_metadata=args.fetch_metadata,
+        api_key=args.api_key,
     )
 
 

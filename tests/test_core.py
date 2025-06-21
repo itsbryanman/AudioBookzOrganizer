@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from audiobookz_organizer.core import organize_audiobooks
+from audiobookz_organizer.core import organize_audiobooks, _process_folder, AudioBookProcessError
 
 
 @pytest.fixture
@@ -54,3 +54,35 @@ def test_organize_audiobooks_commit(mock_library):
     assert (author_dir_2 / "Andy Weir - Project Hail Mary").exists()
 
     assert not (input_dir / "Brandon Sanderson - The Way of Kings").exists()
+
+
+def test_organize_audiobooks_rename_error(mock_library, mocker):
+    input_dir, output_dir = mock_library
+    mocker.patch('pathlib.Path.rename', side_effect=OSError('boom'))
+    result = organize_audiobooks(
+        audiobook_dir=input_dir,
+        output_dir=output_dir,
+        naming="{author} - {title}",
+        structure=["author"],
+        commit=True,
+    )
+    assert result is None
+
+
+def test_process_folder_rename_error(tmp_path: Path, mocker):
+    folder = tmp_path / "Author - Title"
+    folder.mkdir()
+    output_dir = tmp_path / "out"
+    output_dir.mkdir()
+    mocker.patch('pathlib.Path.rename', side_effect=OSError('fail'))
+    with pytest.raises(AudioBookProcessError) as exc:
+        _process_folder(
+            folder,
+            output_dir,
+            "{author} - {title}",
+            ["author"],
+            True,
+            False,
+            None,
+        )
+    assert "ERROR: Failed to move" in str(exc.value)
