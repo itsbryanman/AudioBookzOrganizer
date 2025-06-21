@@ -12,7 +12,7 @@ AudioBookzOrganizer is a Python utility that renames and organizes your audioboo
 
 ## Metadata Sources
 
-By default the organizer reads tags from the audio files themselves. If tags are missing, it falls back to parsing the folder name. Passing ``--fetch-metadata`` enables online lookups through the Google Books API for genre and publication year.
+By default the organizer reads tags from the audio files themselves. If tags are missing, it falls back to parsing the folder name. Passing ``--fetch-metadata`` enables online lookups through the Google Books API for genre and publication year. Using an API key with ``--api-key`` greatly increases the allowed request quota.
 
 ## Performance
 
@@ -23,7 +23,9 @@ Folders are processed concurrently using a thread pool so large libraries are sc
 The organizer can create nested folder hierarchies using any combination of available metadata fields. For example:
 
 ```bash
-organize-audiobooks -i ./in -o ./out --folder-structure genre,author --fetch-metadata --commit
+organize-audiobooks -i ./in -o ./out \
+  --folder-structure genre,author \
+  --fetch-metadata --api-key YOUR_KEY --commit
 ```
 
 

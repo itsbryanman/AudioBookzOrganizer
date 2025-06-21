@@ -1,5 +1,9 @@
 AudioBookzOrganizer Documentation
 ================================
 
-.. automodule:: audiobookz_organizer
-    :members:
+.. toctree::
+   :maxdepth: 2
+
+   core
+   cli
+   models

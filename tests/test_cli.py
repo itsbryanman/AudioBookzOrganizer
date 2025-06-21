@@ -16,3 +16,4 @@ def test_parse_args_defaults(monkeypatch):
     assert args.folder_structure == ''
     assert args.commit is False
     assert args.fetch_metadata is False
+    assert args.api_key is None
