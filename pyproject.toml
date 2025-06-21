@@ -7,12 +7,15 @@ requires-python = ">=3.8"
 license = { file = "LICENSE" }
 dependencies = [
     "mutagen",
+    "requests",
 ]
 
 [project.scripts]
-organize-audiobooks = "audioboookz_organizer.cli:main"
+organize-audiobooks = "audiobookz_organizer.cli:main"
 
 [project.optional-dependencies]
 test = [
     "pytest",
+    "pytest-mock",
+    "pytest-cov",
 ]

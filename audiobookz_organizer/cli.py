@@ -26,6 +26,11 @@ def parse_args() -> argparse.Namespace:
         help="Comma separated hierarchy (e.g. author)",
     )
     parser.add_argument("--commit", action="store_true", help="Apply changes instead of dry run")
+    parser.add_argument(
+        "--fetch-metadata",
+        action="store_true",
+        help="Fetch additional metadata from online sources",
+    )
     return parser.parse_args()
 
 
@@ -46,6 +51,7 @@ def main() -> None:
         naming=args.naming_convention,
         structure=structure,
         commit=args.commit,
+        fetch_metadata=args.fetch_metadata,
     )
 
 
