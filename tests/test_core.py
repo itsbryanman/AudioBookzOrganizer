@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from audioboookz_organizer.core import organize_audiobooks
+from audiobookz_organizer.core import organize_audiobooks
 
 
 @pytest.fixture

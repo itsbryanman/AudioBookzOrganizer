@@ -1,4 +1,5 @@
 # AudioBookzOrganizer
+[![codecov](https://codecov.io/gh/itsbryanman/AudioBookzOrganizer/branch/main/graph/badge.svg)](https://codecov.io/gh/itsbryanman/AudioBookzOrganizer)
 
 AudioBookzOrganizer is a Python utility that renames and organizes your audiobook collection. It can sort folders by author or other metadata using a configurable naming scheme. The goal is to create a clean, navigable library for large audiobook collections.
 
@@ -8,6 +9,23 @@ AudioBookzOrganizer is a Python utility that renames and organizes your audioboo
 * **File Renaming**: Renames folders based on a customizable naming scheme (default: `{title} - {author}`).
 * **Folder Organization**: Optionally creates sub‑folders (e.g. by author) and moves audiobook folders into them.
 * **Command-Line Interface**: Supports dry runs and fully automated execution.
+
+## Metadata Sources
+
+By default the organizer reads tags from the audio files themselves. If tags are missing, it falls back to parsing the folder name. Passing ``--fetch-metadata`` enables online lookups through the Google Books API for genre and publication year.
+
+## Performance
+
+Folders are processed concurrently using a thread pool so large libraries are scanned quickly.
+
+## Advanced Usage
+
+The organizer can create nested folder hierarchies using any combination of available metadata fields. For example:
+
+```bash
+organize-audiobooks -i ./in -o ./out --folder-structure genre,author --fetch-metadata --commit
+```
+
 
 ## Installation
 
