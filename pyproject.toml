@@ -1,18 +1,21 @@
 [project]
-name = "audiobookz-organizer"
+name = "audiobookcleanr"
 version = "1.0.0"
-description = "A utility to organize audiobook collections."
+description = "A powerful Python utility for intelligently organizing audiobook collections with an advanced Terminal UI."
 readme = "README.md"
 requires-python = ">=3.8"
 license = { file = "LICENSE" }
 dependencies = [
-    "mutagen",
-    "requests",
-    "colorama",
+    "mutagen>=1.45.0",
+    "requests>=2.25.0",
+    "colorama>=0.4.4",
+    "python-dotenv>=0.19.0",
+    "textual>=0.41.0",
+    "rich>=13.0.0",
 ]
 
 [project.scripts]
-organize-audiobooks = "audiobookz_organizer.cli:main"
+audiobookcleanr = "audiobookcleanr.cli:main"
 
 [project.optional-dependencies]
 test = [

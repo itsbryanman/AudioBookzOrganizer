@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from audiobookz_organizer.core import organize_audiobooks, _process_folder, AudioBookProcessError
+from audiobookcleanr.core import organize_audiobooks, _process_folder, AudioBookProcessError
 
 
 @pytest.fixture

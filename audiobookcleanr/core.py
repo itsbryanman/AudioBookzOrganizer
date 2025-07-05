@@ -139,6 +139,7 @@ def _process_folder(
             title=metadata.get("title", "Unknown Title"),
             genre=metadata.get("genre", "Unknown Genre"),
             year=metadata.get("year", "0000"),
+            is_multipart=metadata.get("is_multipart", False),
         )
     else:
         audiobook = parse_folder(folder_path)

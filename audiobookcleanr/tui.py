@@ -148,7 +148,7 @@ class AudiobookTUI:
     def _render_header(self):
         """Render the header section."""
         mode = "PREVIEW" if self.dry_run else "COMMIT"
-        title = f"📚 AudioBookzOrganizer [{mode}]"
+        title = f"📚 AudioBookCleanr [{mode}]"
         print("┌" + "─" * (self.terminal_width - 2) + "┐")
         print(f"│{title:^{self.terminal_width - 2}}│")
         print("├" + "─" * (self.terminal_width - 2) + "┤")

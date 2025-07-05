@@ -1,4 +1,4 @@
-You are a senior Python engineer and documentation expert working on the `AudioBookzOrganizer` project. Your tasks are:
+You are a senior Python engineer and documentation expert working on the `AudioBookCleanr` project. Your tasks are:
 
 ---
 

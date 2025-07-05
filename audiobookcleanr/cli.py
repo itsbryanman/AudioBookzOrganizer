@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 import argparse
+import os
 from pathlib import Path
+
+from dotenv import load_dotenv
 
 from .core import organize_audiobooks
 from .logger import setup_logger
@@ -37,11 +40,15 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--write-tags", action="store_true", help="Update audio file metadata tags")
     parser.add_argument("--log", help="Log file path for detailed logging")
     parser.add_argument("--benchmark", action="store_true", help="Enable performance benchmarking")
+    parser.add_argument("--tui", action="store_true", help="Enable Terminal User Interface")
     return parser.parse_args()
 
 
 def main() -> None:
     """Entry point for the CLI."""
+    # Load environment variables from .env file
+    load_dotenv()
+    
     args = parse_args()
     
     # Setup logging
@@ -55,6 +62,9 @@ def main() -> None:
     output_dir = Path(args.output).resolve() if args.output else audiobook_dir.resolve()
     structure = [s.strip() for s in args.folder_structure.split(',') if s.strip()]
 
+    # Use API key from command line arg, or fall back to environment variable
+    api_key = args.api_key or os.getenv("GOOGLE_BOOKS_API_KEY")
+
     organize_audiobooks(
         audiobook_dir=audiobook_dir,
         output_dir=output_dir,
@@ -62,7 +72,7 @@ def main() -> None:
         structure=structure,
         commit=args.commit,
         fetch_metadata=args.fetch_metadata,
-        api_key=args.api_key,
+        api_key=api_key,
         use_cache=not args.no_cache,
         write_tags=args.write_tags,
         enable_benchmark=args.benchmark,

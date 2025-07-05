@@ -1,6 +1,6 @@
 from argparse import Namespace
 
-from audiobookz_organizer.cli import parse_args
+from audiobookcleanr.cli import parse_args
 
 
 def test_parse_args_defaults(monkeypatch):

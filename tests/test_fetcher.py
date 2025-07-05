@@ -2,7 +2,7 @@ from unittest.mock import Mock
 
 import requests
 
-from audiobookz_organizer.fetcher import fetch_book_details
+from audiobookcleanr.fetcher import fetch_book_details
 
 
 def test_fetch_book_details_success(mocker):

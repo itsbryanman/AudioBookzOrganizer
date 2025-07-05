@@ -43,7 +43,7 @@ class AudioBookLogger:
         """
         self.log_file = log_file
         self.enable_colors = enable_colors
-        self.logger = logging.getLogger('audiobookz_organizer')
+        self.logger = logging.getLogger('audiobookcleanr')
         self.logger.setLevel(logging.DEBUG)
         
         # Clear existing handlers

@@ -1,12 +1,12 @@
 
 
-[![CI](https://github.com/itsbryanman/AudioBookzOrganizer/actions/workflows/main.yml/badge.svg)](https://github.com/itsbryanman/AudioBookzOrganizer/actions/workflows/main.yml)
-[![codecov](https://codecov.io/gh/itsbryanman/AudioBookzOrganizer/branch/main/graph/badge.svg)](https://codecov.io/gh/itsbryanman/AudioBookzOrganizer)
+[![CI](https://github.com/itsbryanman/AudioBookCleanr/actions/workflows/main.yml/badge.svg)](https://github.com/itsbryanman/AudioBookCleanr/actions/workflows/main.yml)
+[![codecov](https://codecov.io/gh/itsbryanman/AudioBookCleanr/branch/main/graph/badge.svg)](https://codecov.io/gh/itsbryanman/AudioBookCleanr)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 
-# AudioBookzOrganizer
+# AudioBookCleanr
 
 A powerful and flexible Python utility for intelligently renaming and organizing your audiobook collection with an interactive Terminal User Interface.
 
@@ -15,8 +15,8 @@ A powerful and flexible Python utility for intelligently renaming and organizing
 ### Installation
 
 ```bash
-git clone https://github.com/itsbryanman/AudioBookzOrganizer.git
-cd AudioBookzOrganizer
+git clone https://github.com/itsbryanman/AudioBookCleanr.git
+cd AudioBookCleanr
 pip install -e .
 ```
 
@@ -24,10 +24,10 @@ pip install -e .
 
 ```bash
 # Preview changes (dry run)
-organize-audiobooks --input /path/to/audiobooks
+audiobookcleanr --input /path/to/audiobooks
 
 # Apply changes
-organize-audiobooks --input /path/to/audiobooks --commit
+audiobookcleanr --input /path/to/audiobooks --commit
 ```
 
 -----
@@ -55,15 +55,30 @@ organize-audiobooks --input /path/to/audiobooks --commit
 
 ### Install from Source
 ```bash
-git clone https://github.com/itsbryanman/AudioBookzOrganizer.git
-cd AudioBookzOrganizer
+git clone https://github.com/itsbryanman/AudioBookCleanr.git
+cd AudioBookCleanr
 pip install -e .
 ```
 
+### API Key Configuration
+For enhanced metadata fetching, you'll need a Google Books API key:
+
+1. Get your API key from the [Google Books API Console](https://developers.google.com/books/docs/v1/using#auth)
+2. Create a `.env` file in the project root:
+   ```bash
+   cp .env.example .env
+   ```
+3. Add your API key to the `.env` file:
+   ```
+   GOOGLE_BOOKS_API_KEY=your_actual_api_key_here
+   ```
+
+The API key can also be provided via the `--api-key` command-line option if preferred.
+
 ### For Development
 ```bash
-git clone https://github.com/itsbryanman/AudioBookzOrganizer.git
-cd AudioBookzOrganizer
+git clone https://github.com/itsbryanman/AudioBookCleanr.git
+cd AudioBookCleanr
 pip install -e .[test]
 ```
 
@@ -72,29 +87,30 @@ pip install -e .[test]
 ### Basic Organization
 ```bash
 # Preview changes (recommended first step)
-organize-audiobooks --input /path/to/audiobooks
+audiobookcleanr --input /path/to/audiobooks
 
 # Apply changes after preview
-organize-audiobooks --input /path/to/audiobooks --commit
+audiobookcleanr --input /path/to/audiobooks --commit
 ```
 
 ### Advanced Organization
 ```bash
 # Organize with custom structure and fetch metadata
-organize-audiobooks \
+audiobookcleanr \
   --input /path/to/audiobooks \
   --output /path/to/organized \
   --folder-structure genre,author \
   --naming-convention "{author} - {title}" \
   --fetch-metadata \
-  --api-key YOUR_API_KEY \
   --commit
 ```
+
+*Note: When using `.env` file, the API key is automatically loaded and doesn't need to be specified.*
 
 ### Performance Monitoring
 ```bash
 # Run with benchmarking and logging
-organize-audiobooks \
+audiobookcleanr \
   --input /path/to/audiobooks \
   --benchmark \
   --log /path/to/logfile.txt \

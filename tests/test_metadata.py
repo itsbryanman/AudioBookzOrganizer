@@ -3,7 +3,7 @@ from pathlib import Path
 import mutagen
 import pytest
 
-from audiobookz_organizer.metadata import extract_metadata_from_folder
+from audiobookcleanr.metadata import extract_metadata_from_folder
 
 
 class DummyAudio:

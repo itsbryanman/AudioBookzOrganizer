@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from audiobookz_organizer.parser import parse_folder
+from audiobookcleanr.parser import parse_folder
 
 
 @pytest.mark.parametrize(

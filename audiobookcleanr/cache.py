@@ -192,6 +192,6 @@ class MetadataCache:
 def get_default_cache_dir() -> Path:
     """Get the default cache directory."""
     if hasattr(Path, 'home'):
-        return Path.home() / '.cache' / 'audiobookz_organizer'
+        return Path.home() / '.cache' / 'audiobookcleanr'
     else:
-        return Path('.cache') / 'audiobookz_organizer'
+        return Path('.cache') / 'audiobookcleanr'

@@ -14,6 +14,7 @@ class Audiobook:
     title: str = "Unknown Title"
     genre: str = "Unknown Genre"
     year: str = "0000"
+    is_multipart: bool = False
 
     def get_target_path(self, base_dir: Path, naming_convention: str, structure: list[str]) -> Path:
         """Construct destination path for this audiobook.

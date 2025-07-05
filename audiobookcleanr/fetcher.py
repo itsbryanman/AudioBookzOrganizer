@@ -41,7 +41,7 @@ def fetch_book_details(
     cache = None
     if use_cache:
         cache_path = cache_dir or get_default_cache_dir()
-        cache = MetadataCache(cache_path, cache_type="json")
+        cache = MetadataCache(cache_path, cache_type="sqlite")
         
         # Check cache first
         cached_result = cache.get(title, author)
