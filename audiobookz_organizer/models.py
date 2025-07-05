@@ -23,9 +23,9 @@ class Audiobook:
         base_dir: Path
             Root directory where organized audiobooks are placed.
         naming_convention: str
-            Pattern for the final folder name; placeholders ``{author}`` and ``{title}`` are allowed.
+            Pattern for the final folder name; placeholders ``{author}``, ``{title}``, ``{genre}``, and ``{year}`` are allowed.
         structure: list[str]
-            Sequence of fields used as subdirectories (e.g., ``["author"]``).
+            Sequence of fields used as subdirectories (e.g., ``["genre", "author"]``).
 
         Returns
         -------
@@ -40,5 +40,13 @@ class Audiobook:
         target_base = base_dir.joinpath(*parts)
         clean_author = sanitize_filename(self.author)
         clean_title = sanitize_filename(self.title)
-        folder_name = naming_convention.format(author=clean_author, title=clean_title)
+        clean_genre = sanitize_filename(self.genre)
+        clean_year = sanitize_filename(self.year)
+        
+        folder_name = naming_convention.format(
+            author=clean_author, 
+            title=clean_title, 
+            genre=clean_genre, 
+            year=clean_year
+        )
         return target_base / folder_name

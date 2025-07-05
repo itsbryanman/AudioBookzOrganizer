@@ -8,6 +8,7 @@ license = { file = "LICENSE" }
 dependencies = [
     "mutagen",
     "requests",
+    "colorama",
 ]
 
 [project.scripts]

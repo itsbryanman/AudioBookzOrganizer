@@ -6,6 +6,7 @@ import argparse
 from pathlib import Path
 
 from .core import organize_audiobooks
+from .logger import setup_logger
 
 
 def parse_args() -> argparse.Namespace:
@@ -32,12 +33,20 @@ def parse_args() -> argparse.Namespace:
         help="Fetch additional metadata from online sources",
     )
     parser.add_argument("--api-key", help="Google Books API key for metadata fetching")
+    parser.add_argument("--no-cache", action="store_true", help="Disable metadata caching")
+    parser.add_argument("--write-tags", action="store_true", help="Update audio file metadata tags")
+    parser.add_argument("--log", help="Log file path for detailed logging")
+    parser.add_argument("--benchmark", action="store_true", help="Enable performance benchmarking")
     return parser.parse_args()
 
 
 def main() -> None:
     """Entry point for the CLI."""
     args = parse_args()
+    
+    # Setup logging
+    log_file = Path(args.log) if args.log else None
+    setup_logger(log_file, enable_colors=True)
 
     audiobook_dir = Path(args.input) if args.input else Path(input("Where are your audiobook folders at? (Enter the full path): ").strip())
     if not audiobook_dir.exists() or not audiobook_dir.is_dir():
@@ -54,6 +63,9 @@ def main() -> None:
         commit=args.commit,
         fetch_metadata=args.fetch_metadata,
         api_key=args.api_key,
+        use_cache=not args.no_cache,
+        write_tags=args.write_tags,
+        enable_benchmark=args.benchmark,
     )
 
 
